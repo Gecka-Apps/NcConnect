@@ -1,6 +1,6 @@
 <?php
 
-namespace SocialiteProviders\FranceConnect;
+namespace SocialiteProviders\NcConnect;
 
 use GuzzleHttp\RequestOptions;
 use Illuminate\Support\Arr;
@@ -8,16 +8,19 @@ use Illuminate\Support\Str;
 use Laravel\Socialite\Two\InvalidStateException;
 use SocialiteProviders\Manager\OAuth2\AbstractProvider;
 
+/**
+ * @see Provider's documentation: https://docs.google.com/document/d/13zo1E1eVMFUmbV6ECw2YvTiM-uPBL0DBuWh5wLtzCpA/edit?pli=1
+ */
 class Provider extends AbstractProvider
 {
     /**
      * API URLs.
      */
-    public const PROD_BASE_URL = 'https://app.franceconnect.gouv.fr/api/v1';
+    public const PROD_BASE_URL = 'https://connect.gouv.nc/v2/';
 
-    public const TEST_BASE_URL = 'https://fcp.integ01.dev-franceconnect.fr/api/v1';
+    public const TEST_BASE_URL = 'https://connect-dev.gouv.nc/v2/';
 
-    public const IDENTIFIER = 'FRANCECONNECT';
+    public const IDENTIFIER = 'NCCONNECT';
 
     /**
      * The scopes being requested.
@@ -26,13 +29,9 @@ class Provider extends AbstractProvider
      */
     protected $scopes = [
         'openid',
-        'given_name',
-        'family_name',
-        'gender',
-        'birthplace',
-        'birthcountry',
+        'identite_pivot',
+        'profile',
         'email',
-        'preferred_username',
     ];
 
     /**
@@ -47,7 +46,7 @@ class Provider extends AbstractProvider
      */
     protected function getBaseUrl()
     {
-        return config('app.env') === 'production' ? self::PROD_BASE_URL : self::TEST_BASE_URL;
+        return config('app.env') === 'production' && ! $this->getConfig('force_dev') ? self::PROD_BASE_URL : self::TEST_BASE_URL;
     }
 
     /**
@@ -55,7 +54,7 @@ class Provider extends AbstractProvider
      */
     public static function additionalConfigKeys()
     {
-        return ['logout_redirect'];
+        return ['logout_redirect', 'force_dev'];
     }
 
     /**
@@ -109,9 +108,9 @@ class Provider extends AbstractProvider
         $this->request->session()->put('fc_token_id', Arr::get($response, 'id_token'));
 
         return $user->setTokenId(Arr::get($response, 'id_token'))
-            ->setToken($token)
-            ->setRefreshToken(Arr::get($response, 'refresh_token'))
-            ->setExpiresIn(Arr::get($response, 'expires_in'));
+                    ->setToken($token)
+                    ->setRefreshToken(Arr::get($response, 'refresh_token'))
+                    ->setExpiresIn(Arr::get($response, 'expires_in'));
     }
 
     /**
@@ -134,19 +133,23 @@ class Provider extends AbstractProvider
     protected function mapUserToObject(array $user)
     {
         return (new User())->setRaw($user)->map([
-            'id'                     => $user['sub'],
-            'given_name'             => $user['given_name'],
-            'family_name'            => $user['family_name'],
-            'gender'                 => $user['gender'],
-            'birthplace'             => $user['birthplace'],
-            'birthcountry'           => $user['birthcountry'],
-            'email'                  => $user['email'],
-            'preferred_username'     => $user['preferred_username'],
+            'id'                 => $user['sub'],
+            'email'              => $user['email'],
+            'email_verified'     => $user['email_verified'],
+            'verified'           => $user['verified'] ?? 0,
+            'preferred_username' => $user['preferred_username'] ?? '',
+
+            'given_name'            => $user['given_name'] ?? '',
+            'family_name'           => $user['family_name'] ?? '',
+            'birthdate'             => $user['birthdate'] ?? '',
+            'gender'                => $user['gender'] ?? '',
+            'birthplace'            => $user['birthplace'] ?? '',
+            'birthcountry'          => $user['birthcountry'] ?? '',
         ]);
     }
 
     /**
-     *  Generate logout URL for redirection to FranceConnect.
+     *  Generate logout URL for redirection to NcConnect.
      */
     public function generateLogoutURL()
     {

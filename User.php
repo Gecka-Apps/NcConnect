@@ -1,6 +1,6 @@
 <?php
 
-namespace SocialiteProviders\FranceConnect;
+namespace SocialiteProviders\NcConnect;
 
 use Laravel\Socialite\AbstractUser;
 

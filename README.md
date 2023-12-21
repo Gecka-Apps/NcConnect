@@ -1,7 +1,7 @@
-# FranceConnect
+# NcConnect
 
 ```bash
-composer require socialiteproviders/franceconnect
+composer require socialiteproviders/ncconnect
 ```
 
 ## Installation & Basic Usage
@@ -11,10 +11,11 @@ Please see the [Base Installation Guide](https://socialiteproviders.com/usage/),
 ### Add configuration to `config/services.php`
 
 ```php
-'franceconnect' => [    
-  'client_id' => env('FRANCECONNECT_CLIENT_ID'),  
-  'client_secret' => env('FRANCECONNECT_CLIENT_SECRET'),  
-  'redirect' => env('FRANCECONNECT_REDIRECT_URI') 
+'ncconnect' => [    
+  'client_id' => env('NCCONNECT_CLIENT_ID'),  
+  'client_secret' => env('NCCONNECT_CLIENT_SECRET'),  
+  'redirect' => env('NCCONNECT_REDIRECT_URI'),
+  'force_dev' => env('NCCONNECT_FORCE_DEV') 
 ],
 ```
 
@@ -28,7 +29,7 @@ Add the event to your `listen[]` array in `app/Providers/EventServiceProvider`. 
 protected $listen = [
     \SocialiteProviders\Manager\SocialiteWasCalled::class => [
         // ... other providers
-        \SocialiteProviders\FranceConnect\FranceConnectExtendSocialite::class.'@handle',
+        \SocialiteProviders\NcConnect\NcConnectExtendSocialite::class.'@handle',
     ],
 ];
 ```
@@ -38,5 +39,5 @@ protected $listen = [
 You should now be able to use the provider like you would regularly use Socialite (assuming you have the facade installed):
 
 ```php
-return Socialite::driver('franceconnect')->redirect();
+return Socialite::driver('ncconnect')->redirect();
 ```

@@ -1,9 +1,9 @@
 {
-    "name": "socialiteproviders/franceconnect",
-    "description": "France-Connect OAuth2 Provider for Laravel Socialite",
+    "name": "socialiteproviders/ncconnect",
+    "description": "Nc-Connect OAuth2 Provider for Laravel Socialite",
     "license": "MIT",
     "keywords": [
-        "franceconnect",
+        "ncconnect",
         "laravel",
         "oauth",
         "provider",
@@ -13,12 +13,16 @@
         {
             "name": "Adil Kachbat",
             "email": "contact@akachbat.com"
+        },
+        {
+            "name": "Laurent Dinclaux",
+            "email": "laurent@gecka.nc"
         }
     ],
     "support": {
         "issues": "https://github.com/socialiteproviders/providers/issues",
         "source": "https://github.com/socialiteproviders/providers",
-        "docs": "https://socialiteproviders.com/franceconnect"
+        "docs": "https://socialiteproviders.com/ncconnect"
     },
     "require": {
         "php": "^8.0",
@@ -27,7 +31,7 @@
     },
     "autoload": {
         "psr-4": {
-            "SocialiteProviders\\FranceConnect\\": ""
+            "SocialiteProviders\\NcConnect\\": ""
         }
     }
 }
