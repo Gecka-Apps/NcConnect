@@ -1,86 +1,78 @@
 <?php
 
+/*
+ * Copyright (c) 2018 Adil Kachbat and contributors
+ * Copyright (c) 2023-2026 Gecka
+ *
+ * For the full copyright and license notice, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace SocialiteProviders\NcConnect;
 
-use Laravel\Socialite\AbstractUser;
+use SocialiteProviders\Manager\OAuth2\User as BaseUser;
 
-class User extends AbstractUser
+class User extends BaseUser
 {
     /**
-     * The user's id token hint (serve for logout).
+     * The user's id token hint (used for logout).
      */
-    public $tokenId;
+    public ?string $tokenId = null;
 
-    /**
-     * The user's access token.
-     *
-     * @var string
-     */
-    public $token;
-
-    /**
-     * The refresh token that can be exchanged for a new access token.
-     *
-     * @var string
-     */
-    public $refreshToken;
-
-    /**
-     * The number of seconds the access token is valid for.
-     *
-     * @var int
-     */
-    public $expiresIn;
-
-    /**
-     * Set the token id on the user.
-     *
-     * @param  string  $tokenId
-     * @return $this
-     */
-    public function setTokenId($tokenId)
+    public function setTokenId(?string $tokenId): static
     {
         $this->tokenId = $tokenId;
 
         return $this;
     }
 
-    /**
-     * Set the token on the user.
-     *
-     * @param  string  $token
-     * @return $this
-     */
-    public function setToken($token)
+    public function getPreferredUsername(): string
     {
-        $this->token = $token;
+        return $this->attributes['preferred_username'] ?? '';
+    }
 
-        return $this;
+    public function getGivenName(): string
+    {
+        return $this->attributes['given_name'] ?? '';
+    }
+
+    public function getFirstName(): string
+    {
+        return $this->attributes['first_name'] ?? '';
+    }
+
+    public function getFamilyName(): string
+    {
+        return $this->attributes['family_name'] ?? '';
+    }
+
+    public function isEmailVerified(): bool
+    {
+        return (bool) ($this->attributes['email_verified'] ?? false);
     }
 
     /**
-     * Set the refresh token required to obtain a new access token.
+     * Identity verification level.
      *
-     * @param  string  $refreshToken
-     * @return $this
+     * 0 = unverified, 1 = declarative, 2 = digitally verified.
      */
-    public function setRefreshToken($refreshToken)
+    public function getVerifiedLevel(): int
     {
-        $this->refreshToken = $refreshToken;
-
-        return $this;
+        return (int) ($this->attributes['verified'] ?? 0);
     }
 
-    /**
-     * Set the number of seconds the access token is valid for.
-     *
-     * @param  int  $expiresIn
-     * @return $this
-     */
-    public function setExpiresIn($expiresIn)
+    public function getBirthdate(): string
     {
-        $this->expiresIn = $expiresIn;
+        return $this->attributes['birthdate'] ?? '';
+    }
 
-        return $this;
+    public function getGender(): string
+    {
+        return $this->attributes['gender'] ?? '';
+    }
+
+    public function getBirthplace(): string
+    {
+        return $this->attributes['birthplace'] ?? '';
     }
 }

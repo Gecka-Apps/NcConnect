@@ -1,5 +1,5 @@
 {
-    "name": "socialiteproviders/ncconnect",
+    "name": "gecka/socialite-ncconnect",
     "description": "Nc-Connect OAuth2 Provider for Laravel Socialite",
     "license": "MIT",
     "keywords": [
@@ -13,6 +13,10 @@
         {
             "name": "Adil Kachbat",
             "email": "contact@akachbat.com"
+        },
+        {
+            "name": "Laurent Dinclaux",
+            "email": "laurent@gecka.nc"
         }
     ],
     "support": {
@@ -21,13 +25,19 @@
         "docs": "https://socialiteproviders.com/ncconnect"
     },
     "require": {
-        "php": "^8.0",
-        "ext-json": "*",
+        "php": "^8.2",
         "socialiteproviders/manager": "^4.4"
+    },
+    "require-dev": {
+        "laravel/pint": "^1.24"
     },
     "autoload": {
         "psr-4": {
             "SocialiteProviders\\NcConnect\\": ""
         }
+    },
+    "scripts": {
+        "lint": "pint --test",
+        "fix": "pint"
     }
 }
